@@ -2,6 +2,8 @@ import React from 'react';
 import { Redirect, useHistory, useParams } from 'react-router-dom';
 import { useFetch } from '../../../../../shared/hooks/useFetch';
 import { useQuery } from '../../../../../shared/hooks/useQuery';
+import { ResultsCarousel } from '../../../components/result-carousel/ResultsCarousel';
+import { ResultsLinks } from '../../../components/results-links/ResultsLinks';
 import { LobbyStatus } from '../../../enums/LobbyStatus';
 import { TelestrationsRoundType } from '../../../enums/TelestrationsRoundType';
 import { Lobby } from '../../../interfaces/Lobby';
@@ -20,6 +22,14 @@ export function TelestrationsResultsView(): JSX.Element {
   const [ lobby, setLobby ] = React.useState<Lobby>(null as any);
   const [ playerResults, setPlayerResults ] = React.useState<TelestrationsResult>(null as any);
 
+  const [ showCarousel, setShowCarousel ] = React.useState(false);
+  const [ viewPlayerList, setViewPlayerList ] = React.useState(false);
+
+  React.useEffect(() => {
+    setShowCarousel(false);
+    setViewPlayerList(false);
+  }, [playerId]);
+
   useFetch<Lobby>({
     url: `/telestrations/lobby/${params.id}`,
     onSuccess: setLobby,
@@ -30,6 +40,14 @@ export function TelestrationsResultsView(): JSX.Element {
     url: `/telestrations/lobby/${params.id}/players/${playerId}/results`,
     onSuccess: setPlayerResults
   });
+
+  function onClickViewChain(): void {
+    setShowCarousel(true);
+  }
+
+  function onClickViewOtherPlayers(): void {
+    setViewPlayerList(true);
+  }
 
   if (!lobby)
     return <></>;
@@ -44,20 +62,39 @@ export function TelestrationsResultsView(): JSX.Element {
     <div>
       <h1>Showing results for: {playerResults.player.username}</h1>
 
-      <p className='h6'>Your original word was: {playerResults.word}</p>
+      <p className='h6'>{playerResults.player.username}'s original word was: {playerResults.word}</p>
 
-      {playerResults.finalRound.roundType === TelestrationsRoundType.DrawWord
-        ? (
-          <div>
-            <p>Here's the final drawing:</p>
-            <img alt='' src={playerResults.finalRound.drawing} />
-          </div>
-        ) : (
-          <div>
-            <p>The final guess for this word was: {playerResults.finalRound.word}</p>
-          </div>
-        )
-      }
+      {(() => {
+        if (showCarousel) {
+          return <ResultsCarousel results={playerResults} onClickBack={() => setShowCarousel(false)} />;
+        }
+
+        if (viewPlayerList) {
+          return <ResultsLinks lobby={lobby} currentPlayerId={playerId} onClickBack={() => setViewPlayerList(false)} />;
+        }
+
+        return (
+          <>
+            {playerResults.finalRound.roundType === TelestrationsRoundType.DrawWord
+              ? (
+                <div>
+                  <p>Here's the final drawing:</p>
+                  <img alt='' src={playerResults.finalRound.drawing} />
+                </div>
+              ) : (
+                <div>
+                  <p>The final guess for this word was: {playerResults.finalRound.word}</p>
+                </div>
+              )
+            }
+
+            <div>
+              <button className='btn btn-primary' onClick={onClickViewChain}>See how it got here</button>
+              <button className='btn btn-secondary mx-2' onClick={onClickViewOtherPlayers}>View other player's results</button>
+            </div>
+          </>
+        );
+      })()}
     </div>
   );
 }
