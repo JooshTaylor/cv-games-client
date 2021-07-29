@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/cv-games-client/static/css/main.9e7f1ffb.chunk.css",
+    "main.js": "/cv-games-client/static/js/main.be97400c.chunk.js",
+    "main.js.map": "/cv-games-client/static/js/main.be97400c.chunk.js.map",
+    "runtime-main.js": "/cv-games-client/static/js/runtime-main.a08b004c.js",
+    "runtime-main.js.map": "/cv-games-client/static/js/runtime-main.a08b004c.js.map",
+    "static/js/2.c12a3ed6.chunk.js": "/cv-games-client/static/js/2.c12a3ed6.chunk.js",
+    "static/js/2.c12a3ed6.chunk.js.map": "/cv-games-client/static/js/2.c12a3ed6.chunk.js.map",
+    "index.html": "/cv-games-client/index.html",
+    "static/css/main.9e7f1ffb.chunk.css.map": "/cv-games-client/static/css/main.9e7f1ffb.chunk.css.map",
+    "static/js/2.c12a3ed6.chunk.js.LICENSE.txt": "/cv-games-client/static/js/2.c12a3ed6.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.a08b004c.js",
+    "static/js/2.c12a3ed6.chunk.js",
+    "static/css/main.9e7f1ffb.chunk.css",
+    "static/js/main.be97400c.chunk.js"
+  ]
+}
