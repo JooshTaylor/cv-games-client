@@ -4,5 +4,5 @@ export interface TelestrationsRound {
   roundNumber: number;
   roundType: TelestrationsRoundType;
   word?: string;
-  imageUrl?: string;
+  drawing?: string;
 }

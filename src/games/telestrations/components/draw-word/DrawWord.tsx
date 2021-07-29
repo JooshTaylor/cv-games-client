@@ -5,6 +5,7 @@ import './canvas.scss';
 
 interface DrawWordProps {
   round: TelestrationsRound;
+  onSubmitDrawing: (drawingImageUrl: string) => void;
 }
 
 export function DrawWord(props: DrawWordProps): JSX.Element {
@@ -15,6 +16,8 @@ export function DrawWord(props: DrawWordProps): JSX.Element {
   const [ lastY, setLastY ] = React.useState(0);
   const [ lineThickness, setLineThickness ] = React.useState(1);
 
+  const [ lockCanvas, setLockCanvas ] = React.useState(false);
+
   React.useEffect(() => {
     if (!canvasRef.current)
       return;
@@ -22,13 +25,13 @@ export function DrawWord(props: DrawWordProps): JSX.Element {
     const canvas = canvasRef.current;
 
     const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
-      
+
     canvas.width = canvas.height = 600;
     ctx.fillRect(0, 0, 600, 600);
   }, [canvasRef.current]);
 
   function onMouseDown(e: any) {
-    if (!canvasRef.current)
+    if (!canvasRef.current || lockCanvas)
       return;
 
     const ctx = canvasRef.current.getContext('2d') as CanvasRenderingContext2D
@@ -40,11 +43,14 @@ export function DrawWord(props: DrawWordProps): JSX.Element {
   }
 
   function onMouseUp(e: any) {
+    if (lockCanvas)
+      return;
+
     setIsPainting(false);
   }
 
   function onMouseMove(e: any) {
-    if (!canvasRef.current)
+    if (!canvasRef.current || lockCanvas)
       return;
 
     const ctx = canvasRef.current.getContext('2d') as CanvasRenderingContext2D
@@ -53,32 +59,32 @@ export function DrawWord(props: DrawWordProps): JSX.Element {
       const mouseY = e.pageY - canvasRef.current.offsetTop;
 
       // find all points between   
-      var x1 = mouseX,
+      let x1 = mouseX,
           x2 = lastX,
           y1 = mouseY,
           y2 = lastY;
 
-      var steep = (Math.abs(y2 - y1) > Math.abs(x2 - x1));
+      let steep = (Math.abs(y2 - y1) > Math.abs(x2 - x1));
       if (steep){
-          var x = x1;
+          let x = x1;
           x1 = y1;
           y1 = x;
 
-          var y = y2;
+          let y = y2;
           y2 = x2;
           x2 = y;
       }
       if (x1 > x2) {
-          var x = x1;
+          let x = x1;
           x1 = x2;
           x2 = x;
 
-          var y = y1;
+          let y = y1;
           y1 = y2;
           y2 = y;
       }
 
-      var dx = x2 - x1,
+      let dx = x2 - x1,
           dy = Math.abs(y2 - y1),
           error = 0,
           de = dy / dx,
@@ -94,9 +100,8 @@ export function DrawWord(props: DrawWordProps): JSX.Element {
       if (newLineThickness < 1){
         newLineThickness = 1;   
       }
-      
 
-      for (var x = x1; x < x2; x++) {
+      for (let x = x1; x < x2; x++) {
           if (steep) {
               ctx.fillRect(y, x, lineThickness , lineThickness );
           } else {
@@ -114,17 +119,43 @@ export function DrawWord(props: DrawWordProps): JSX.Element {
       setLastY(mouseY);
       setLineThickness(newLineThickness);
 
+    }
   }
+
+  function onClickDone(e: any): void {
+    e.preventDefault();
+
+    if (!canvasRef.current)
+      return;
+
+    setLockCanvas(true);
+
+    const ctx = canvasRef.current.getContext('2d') as CanvasRenderingContext2D;
+
+    const imgData = canvasRef.current.toDataURL();
+
+
+    props.onSubmitDrawing(imgData);
+    
+    // ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+
+    // window.setTimeout(() => {
+    //   ctx.putImageData(imgData, 0, 0);
+    // }, 1000);
   }
 
   return (
     <>
       <h2>Draw word: {props.round.word}</h2>
 
+      {props.round.drawing && (
+        <img alt='' src={props.round.drawing} style={{ width: '600px', height: '600px' }} />
+      )}
+
       <canvas
         id="canvas"
-        height="500"
-        width="500"
+        height="600"
+        width="600"
         ref={canvasRef}
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
@@ -132,6 +163,10 @@ export function DrawWord(props: DrawWordProps): JSX.Element {
       >
 
       </canvas>
+
+      <div>
+        <button className='btn btn-primary' onClick={onClickDone}>Submit Drawing</button>
+      </div>
     </>
   );
 }

@@ -65,6 +65,14 @@ export function TelestrationsPlayView(): JSX.Element {
     });
   }
 
+  function onSubmitDrawing(drawingImageUrl: string): void {
+    axiosFetch({
+      url: `/telestrations/lobby/${params.id}/players/${currentPlayer.id}/round/${lobby.currentRound}/drawing`,
+      method: 'post',
+      body: { drawing: drawingImageUrl }
+    });
+  }
+
   if (!round)
     return <></>;
 
@@ -80,7 +88,7 @@ export function TelestrationsPlayView(): JSX.Element {
     }
 
     case TelestrationsRoundType.DrawWord: {
-      return <DrawWord round={round} />;
+      return <DrawWord round={round} onSubmitDrawing={onSubmitDrawing} />;
     }
 
     case TelestrationsRoundType.GuessWord: {

@@ -8,7 +8,7 @@ interface GuessWordProps {
 export function GuessWord(props: GuessWordProps): JSX.Element {
   return (
     <>
-      <h2>Guess word: {props.round.imageUrl}</h2>
+      <h2>Guess word: {props.round.drawing}</h2>
     </>
   );
 }
