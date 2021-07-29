@@ -2,7 +2,7 @@ import { Account } from "../../../shared/interfaces/Account";
 
 export const AccountHelper = {
   getPlayerForLobby(lobbyId: string): Account {
-    const account = window.localStorage.getItem(`account:${lobbyId}`);
+    const account = window.sessionStorage.getItem(`account:${lobbyId}`);
 
     if (typeof(account) === 'string')
       return JSON.parse(account);
@@ -12,10 +12,10 @@ export const AccountHelper = {
 
   setPlayerForLobby(lobbyId: string, account: Account): void {
     AccountHelper.clearPlayer(lobbyId);
-    window.localStorage.setItem(`account:${lobbyId}`, JSON.stringify(account));
+    window.sessionStorage.setItem(`account:${lobbyId}`, JSON.stringify(account));
   },
 
   clearPlayer(lobbyId: string): void {
-    window.localStorage.removeItem(`account:${lobbyId}`);
+    window.sessionStorage.removeItem(`account:${lobbyId}`);
   }
 };
