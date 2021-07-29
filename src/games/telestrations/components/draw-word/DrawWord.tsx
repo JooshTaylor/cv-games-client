@@ -118,7 +118,6 @@ export function DrawWord(props: DrawWordProps): JSX.Element {
       setLastX(mouseX);
       setLastY(mouseY);
       setLineThickness(newLineThickness);
-
     }
   }
 
@@ -129,28 +128,12 @@ export function DrawWord(props: DrawWordProps): JSX.Element {
       return;
 
     setLockCanvas(true);
-
-    const ctx = canvasRef.current.getContext('2d') as CanvasRenderingContext2D;
-
-    const imgData = canvasRef.current.toDataURL();
-
-
-    props.onSubmitDrawing(imgData);
-    
-    // ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-
-    // window.setTimeout(() => {
-    //   ctx.putImageData(imgData, 0, 0);
-    // }, 1000);
+    props.onSubmitDrawing(canvasRef.current.toDataURL());
   }
 
   return (
     <>
       <h2>Draw word: {props.round.word}</h2>
-
-      {props.round.drawing && (
-        <img alt='' src={props.round.drawing} style={{ width: '600px', height: '600px' }} />
-      )}
 
       <canvas
         id="canvas"

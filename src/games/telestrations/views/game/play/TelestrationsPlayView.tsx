@@ -73,6 +73,14 @@ export function TelestrationsPlayView(): JSX.Element {
     });
   }
 
+  function onGuessWord(guess: string): void {
+    axiosFetch({
+      url: `/telestrations/lobby/${params.id}/players/${currentPlayer.id}/round/${lobby.currentRound}/guess`,
+      method: 'post',
+      body: { guess }
+    });
+  }
+
   if (!round)
     return <></>;
 
@@ -92,7 +100,7 @@ export function TelestrationsPlayView(): JSX.Element {
     }
 
     case TelestrationsRoundType.GuessWord: {
-      return <GuessWord round={round} />;
+      return <GuessWord round={round} onGuessWord={onGuessWord} />;
     }
 
     default: {
