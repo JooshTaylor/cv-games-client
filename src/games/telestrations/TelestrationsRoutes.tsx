@@ -21,7 +21,7 @@ export function TelestrationsRoutes(): JSX.Element {
     return () => {
       window.removeEventListener("beforeunload", beforeUnloadListener, {capture: true});
     };
-  });
+  }, []);
 
   return (
     <div>

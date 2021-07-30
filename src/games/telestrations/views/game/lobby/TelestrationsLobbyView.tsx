@@ -5,6 +5,7 @@ import { SocketIoContext } from '../../../../../shared/contexts/SocketIoContext'
 import { useFetch } from '../../../../../shared/hooks/useFetch';
 import { Account } from '../../../../../shared/interfaces/Account';
 import { axiosFetch } from '../../../../../shared/utils/axiosFetch';
+import { Avatar } from '../../../components/avatar/Avatar';
 import { TelestrationsEvents } from '../../../constants/TelestrationsEvents';
 import { LobbyStatus } from '../../../enums/LobbyStatus';
 import { Lobby } from '../../../interfaces/Lobby';
@@ -128,9 +129,8 @@ export function TelestrationsLobbyView(): JSX.Element {
       {!!selectedPlayer && (
         <div className='pb-3'>
           <h2 className='h5'>You have selected:</h2>
-          <div className='d-flex flex-column align-items-center' style={{ width: '50px' }}>
-            <img alt={selectedPlayer.username} src={selectedPlayer.imageUrl} className='avatar' />
-            <div>{selectedPlayer.username}</div>
+          <div style={{ width: '50px' }}>
+            <Avatar player={selectedPlayer} />
           </div>
         </div>
       )}
@@ -142,9 +142,8 @@ export function TelestrationsLobbyView(): JSX.Element {
           <ul className='list-unstyled d-flex align-items-center flex-wrap'>
             {availablePlayers.map(player => (
               <li key={player.id}>
-                <button className='btn btn-link d-flex flex-column align-items-center text-decoration-none' onClick={() => selectPlayer(player)}>
-                  <img alt={player.username} src={player.imageUrl} className='avatar' />
-                  <div>{player.username}</div>
+                <button className='btn btn-link text-decoration-none' onClick={() => selectPlayer(player)}>
+                  <Avatar player={player} />
                 </button>
               </li>
             ))}
@@ -157,9 +156,8 @@ export function TelestrationsLobbyView(): JSX.Element {
           <ul className='list-unstyled d-flex align-items-center flex-wrap'>
             {lobby.players.map(player => (
               <li key={player.id}>
-                <button className='btn btn-link d-flex flex-column align-items-center text-decoration-none' onClick={() => deselectPlayer(player)}>
-                  <img alt={player.username} src={player.imageUrl} className='avatar' />
-                  <div>{player.username}</div>
+                <button className='btn btn-link text-decoration-none' onClick={() => deselectPlayer(player)}>
+                  <Avatar player={player} />
                 </button>
               </li>
             ))}
@@ -167,7 +165,7 @@ export function TelestrationsLobbyView(): JSX.Element {
         </div>
       </div>
 
-      {selectedPlayer.username === 'joosh' && (
+      {(selectedPlayer?.username === 'joosh' && lobby.players.length > 2) && (
         <div>
           <button onClick={onClickStartGame} className='btn btn-primary' disabled={disableStartButton}>
             Start Game
