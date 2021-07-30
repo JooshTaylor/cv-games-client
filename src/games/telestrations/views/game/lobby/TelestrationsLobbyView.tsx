@@ -125,15 +125,25 @@ export function TelestrationsLobbyView(): JSX.Element {
     <div>
       <h1>Waiting Room</h1>
 
+      {!!selectedPlayer && (
+        <div className='pb-3'>
+          <h2 className='h5'>You have selected:</h2>
+          <div className='d-flex flex-column align-items-center' style={{ width: '50px' }}>
+            <img alt={selectedPlayer.username} src={selectedPlayer.imageUrl} className='avatar' />
+            <div>{selectedPlayer.username}</div>
+          </div>
+        </div>
+      )}
+
       <div className='row'>
         <div className='col-6'>
-          <h2>Select an account</h2>
+          <h2 className='h6'>Select an account</h2>
 
           <ul className='list-unstyled d-flex align-items-center flex-wrap'>
             {availablePlayers.map(player => (
               <li key={player.id}>
                 <button className='btn btn-link d-flex flex-column align-items-center text-decoration-none' onClick={() => selectPlayer(player)}>
-                  <img alt={player.username} src={player.imageUrl} style={{ width: '50px', height: '50px' }} />
+                  <img alt={player.username} src={player.imageUrl} className='avatar' />
                   <div>{player.username}</div>
                 </button>
               </li>
@@ -142,13 +152,13 @@ export function TelestrationsLobbyView(): JSX.Element {
         </div>
 
         <div className='col-6'>
-          <h2>Players</h2>
+          <h2 className='h6'>Players</h2>
 
           <ul className='list-unstyled d-flex align-items-center flex-wrap'>
             {lobby.players.map(player => (
               <li key={player.id}>
                 <button className='btn btn-link d-flex flex-column align-items-center text-decoration-none' onClick={() => deselectPlayer(player)}>
-                  <img alt={player.username} src={player.imageUrl} style={{ width: '50px', height: '50px' }} />
+                  <img alt={player.username} src={player.imageUrl} className='avatar' />
                   <div>{player.username}</div>
                 </button>
               </li>
