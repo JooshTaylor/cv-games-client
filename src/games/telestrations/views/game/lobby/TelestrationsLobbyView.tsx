@@ -167,11 +167,13 @@ export function TelestrationsLobbyView(): JSX.Element {
         </div>
       </div>
 
-      <div>
-        <button onClick={onClickStartGame} className='btn btn-primary' disabled={disableStartButton}>
-          Start Game
-        </button>
-      </div>
+      {selectedPlayer.username === 'joosh' && (
+        <div>
+          <button onClick={onClickStartGame} className='btn btn-primary' disabled={disableStartButton}>
+            Start Game
+          </button>
+        </div>
+      )}
     </div>
   );
 }
