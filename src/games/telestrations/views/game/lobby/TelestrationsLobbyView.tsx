@@ -132,8 +132,9 @@ export function TelestrationsLobbyView(): JSX.Element {
           <ul className='list-unstyled d-flex align-items-center flex-wrap'>
             {availablePlayers.map(player => (
               <li key={player.id}>
-                <button className='btn btn-link' onClick={() => selectPlayer(player)}>
-                  {player.username}
+                <button className='btn btn-link d-flex flex-column align-items-center text-decoration-none' onClick={() => selectPlayer(player)}>
+                  <img alt={player.username} src={player.imageUrl} style={{ width: '50px', height: '50px' }} />
+                  <div>{player.username}</div>
                 </button>
               </li>
             ))}
@@ -146,8 +147,9 @@ export function TelestrationsLobbyView(): JSX.Element {
           <ul className='list-unstyled d-flex align-items-center flex-wrap'>
             {lobby.players.map(player => (
               <li key={player.id}>
-                <button className='btn btn-link' onClick={() => deselectPlayer(player)}>
-                  {player.username}
+                <button className='btn btn-link d-flex flex-column align-items-center text-decoration-none' onClick={() => deselectPlayer(player)}>
+                  <img alt={player.username} src={player.imageUrl} style={{ width: '50px', height: '50px' }} />
+                  <div>{player.username}</div>
                 </button>
               </li>
             ))}
