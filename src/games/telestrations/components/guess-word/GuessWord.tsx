@@ -26,7 +26,7 @@ export function GuessWord(props: GuessWordProps): JSX.Element {
         }
       </h2>
 
-      <img alt='' src={props.round.drawing} style={{ width: '600px', height: '600px' }} />
+      <img alt='' src={props.round.drawing} style={{ width: '600px', height: '600px' }} className='mb-3' />
 
       <form onSubmit={onSubmit}>
         <div className='form-group pb-3'>

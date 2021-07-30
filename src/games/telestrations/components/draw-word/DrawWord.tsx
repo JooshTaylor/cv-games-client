@@ -16,7 +16,7 @@ export function DrawWord(props: DrawWordProps): JSX.Element {
   const [ lastY, setLastY ] = React.useState(0);
   const [ lineThickness, setLineThickness ] = React.useState(1);
 
-  const [ lockCanvas, setLockCanvas ] = React.useState(false);
+  const [ lockCanvas, setLockCanvas ] = React.useState(!!props.round.drawing);
 
   React.useEffect(() => {
     if (!canvasRef.current)
@@ -124,7 +124,7 @@ export function DrawWord(props: DrawWordProps): JSX.Element {
   function onClickDone(e: any): void {
     e.preventDefault();
 
-    if (!canvasRef.current)
+    if (!canvasRef.current || lockCanvas)
       return;
 
     setLockCanvas(true);
@@ -133,7 +133,12 @@ export function DrawWord(props: DrawWordProps): JSX.Element {
 
   return (
     <>
-      <h2>Draw word: {props.round.word}</h2>
+      <h2>
+        {lockCanvas
+          ? <>Drawing submitted! Waiting for other players...</>
+          : <>Draw word: {props.round.word}</>
+        }
+      </h2>
 
       <canvas
         id="canvas"
@@ -144,11 +149,10 @@ export function DrawWord(props: DrawWordProps): JSX.Element {
         onMouseMove={onMouseMove}
         onMouseUp={onMouseUp}
       >
-
       </canvas>
 
       <div>
-        <button className='btn btn-primary' onClick={onClickDone}>Submit Drawing</button>
+        <button className='btn btn-primary' onClick={onClickDone} disabled={lockCanvas}>Submit Drawing</button>
       </div>
     </>
   );
