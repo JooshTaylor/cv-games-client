@@ -58,15 +58,23 @@ export function TelestrationsResultsView(): JSX.Element {
   if (!playerResults)
     return <></>;
 
+  const finalResult = playerResults.rounds[playerResults.rounds.length - 1];
+
   return (
     <div>
       <h1>Showing results for: {playerResults.player.username}</h1>
 
-      <p className='h6'>{playerResults.player.username}'s original word was: {playerResults.word}</p>
+      <p className='h5'>{playerResults.player.username}'s original word was: {playerResults.word}</p>
 
       {(() => {
         if (showCarousel) {
-          return <ResultsCarousel results={playerResults} onClickBack={() => setShowCarousel(false)} />;
+          return (
+            <ResultsCarousel
+              results={playerResults}
+              onClickBack={() => setShowCarousel(false)}
+              originalWord={playerResults.word}
+            />
+          );
         }
 
         if (viewPlayerList) {
@@ -75,15 +83,15 @@ export function TelestrationsResultsView(): JSX.Element {
 
         return (
           <>
-            {playerResults.finalRound.roundType === TelestrationsRoundType.DrawWord
+            {finalResult.drawing
               ? (
                 <div>
-                  <p>Here's the final drawing:</p>
-                  <img alt='' src={playerResults.finalRound.drawing} />
+                  <p>Here's the final drawing, created by {finalResult.player.username}:</p>
+                  <img alt='' src={finalResult.drawing} className='mb-3' />
                 </div>
               ) : (
                 <div>
-                  <p>The final guess for this word was: {playerResults.finalRound.word}</p>
+                  <p>The final guess for this word was <strong>{finalResult.word}</strong>, guessed by {finalResult.player.username}</p>
                 </div>
               )
             }
@@ -91,6 +99,7 @@ export function TelestrationsResultsView(): JSX.Element {
             <div>
               <button className='btn btn-primary' onClick={onClickViewChain}>See how it got here</button>
               <button className='btn btn-secondary mx-2' onClick={onClickViewOtherPlayers}>View other player's results</button>
+              <button className='btn btn-secondary mx-2' onClick={() => history.push('/telestrations')}>Back to home</button>
             </div>
           </>
         );
