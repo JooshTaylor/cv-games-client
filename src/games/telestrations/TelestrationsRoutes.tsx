@@ -10,6 +10,19 @@ import { TelestrationsHomeView } from './views/home/TelestrationsHomeView';
 export function TelestrationsRoutes(): JSX.Element {
   const match = useRouteMatch();
 
+  React.useEffect(() => {
+    const beforeUnloadListener = (event: any) => {
+      event.preventDefault();
+      return event.returnValue = "Please don't reload the page";
+    };
+
+    window.addEventListener("beforeunload", beforeUnloadListener, {capture: true});
+
+    return () => {
+      window.removeEventListener("beforeunload", beforeUnloadListener, {capture: true});
+    };
+  });
+
   return (
     <div>
       <Switch>
