@@ -5,7 +5,6 @@ import { useQuery } from '../../../../../shared/hooks/useQuery';
 import { ResultsCarousel } from '../../../components/result-carousel/ResultsCarousel';
 import { ResultsLinks } from '../../../components/results-links/ResultsLinks';
 import { LobbyStatus } from '../../../enums/LobbyStatus';
-import { TelestrationsRoundType } from '../../../enums/TelestrationsRoundType';
 import { Lobby } from '../../../interfaces/Lobby';
 import { TelestrationsResult } from '../../../interfaces/TelestrationsResult';
 
