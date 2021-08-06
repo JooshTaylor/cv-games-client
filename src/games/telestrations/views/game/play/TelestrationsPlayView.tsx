@@ -154,7 +154,7 @@ export function TelestrationsPlayView(): JSX.Element {
             </React.Fragment>
           )) ?? <></>}
 
-          <Avatar key='last-player-in-chain' player={chain[0]} />
+          {!!chain?.length && <Avatar key='last-player-in-chain' player={chain[0]} />}
         </div>
       </div>
 
