@@ -27,6 +27,7 @@ export function TelestrationsPlayView(): JSX.Element {
   const [ word, setWord ] = React.useState<string>();
   const [ round, setRound ] = React.useState<TelestrationsRound>(null as any);
   const [ waitingOn, setWaitingOn ] = React.useState<Account[]>(null as any);
+  const [ chain, setChain ] = React.useState<Account[]>(null as any);
 
   const socket = React.useContext(SocketIoContext);
 
@@ -48,6 +49,11 @@ export function TelestrationsPlayView(): JSX.Element {
   useFetch<TelestrationsRound>(lobby && {
     url: `/telestrations/lobby/${lobby.id}/round/${lobby.currentRound}?playerId=${currentPlayer.id}`,
     onSuccess: setRound
+  });
+  
+  useFetch<Account[]>(lobby && {
+    url: `/telestrations/lobby/${lobby.id}/chain`,
+    onSuccess: setChain
   });
 
   React.useEffect(() => {
@@ -96,6 +102,36 @@ export function TelestrationsPlayView(): JSX.Element {
     });
   }
 
+  const receiver = chain.find((p, i) => {
+    let prevInChain: Account;
+
+    if (i === 0) {
+      prevInChain = chain[chain.length - 1];
+    } else {
+      prevInChain = chain[i - 1];
+    }
+
+    if (prevInChain.id !== currentPlayer.id)
+      return false;
+
+    return true;
+  });
+
+  const sender = chain.find((p, i) => {
+    let nextInChain: Account;
+
+    if (i === chain.length - 1) {
+      nextInChain = chain[0];
+    } else {
+      nextInChain = chain[i + 1];
+    }
+
+    if (nextInChain.id !== currentPlayer.id)
+      return false;
+
+    return true;
+  });
+
   if (!round)
     return <></>;
 
@@ -103,43 +139,70 @@ export function TelestrationsPlayView(): JSX.Element {
     return <Redirect to={`/telestrations/${lobby.id}`} />;
 
   return (
-    <div className='row'>
-      <div className='col-8'>
-        {(() => {
-          switch (round.roundType) {
-            case TelestrationsRoundType.SelectWord: {
-              if (word === undefined)
-                return <></>;
-        
-              return <SelectWord onSelectWord={onSelectWord} selectedWord={word} />;
-            }
-        
-            case TelestrationsRoundType.DrawWord: {
-              return <DrawWord round={round} onSubmitDrawing={onSubmitDrawing} />;
-            }
-        
-            case TelestrationsRoundType.GuessWord: {
-              return <GuessWord round={round} onGuessWord={onGuessWord} />;
-            }
-        
-            default: {
-              return <Redirect to={`/telestrations/${lobby.id}`} />;
-            }
-          }
-        })()}
+    <div>
+      <div>
+        <p className='h6'>Chain:</p>
+        <div className='d-flex align-items-center pb-3'>
+          {chain.map(p => (
+            <React.Fragment key={p.id}>
+              <Avatar player={p} />
+              <img
+                src='https://cdn4.iconfinder.com/data/icons/geomicons/32/672374-chevron-right-512.png'
+                alt=''
+                style={{ width: '15px', height: '15px', margin: '0 5px' }}
+              />
+            </React.Fragment>
+          ))}
+
+          <Avatar key='last-player-in-chain' player={chain[0]} />
+        </div>
       </div>
 
-      {!!waitingOn?.length && (
-        <div className='col-4'>
-          <p className='h6'>Waiting on:</p>
+      <div className='row'>
+        <div className='col-8'>
+          {(() => {
+            switch (round.roundType) {
+              case TelestrationsRoundType.SelectWord: {
+                if (word === undefined)
+                  return <></>;
+          
+                return <SelectWord onSelectWord={onSelectWord} selectedWord={word} />;
+              }
+          
+              case TelestrationsRoundType.DrawWord: {
+                return <DrawWord round={round} onSubmitDrawing={onSubmitDrawing} />;
+              }
+          
+              case TelestrationsRoundType.GuessWord: {
+                return <GuessWord round={round} onGuessWord={onGuessWord} />;
+              }
+          
+              default: {
+                return <Redirect to={`/telestrations/${lobby.id}`} />;
+              }
+            }
+          })()}
+        </div>
 
-          <div className='d-flex align-items-center flex-wrap'>
-            {waitingOn.map(p => (
-              <div key={p.username} className='mx-2'>
-                <Avatar player={p} />
-              </div>
-            ))}
+        {!!waitingOn?.length && (
+          <div className='col-4'>
+            <p className='h6'>Waiting on:</p>
+
+            <div className='d-flex align-items-center flex-wrap'>
+              {waitingOn.map(p => (
+                <div key={p.username} className='mx-2'>
+                  <Avatar player={p} />
+                </div>
+              ))}
+            </div>
           </div>
+        )}
+      </div>
+
+      {(!!receiver && !!sender) && (
+        <div className='pt-3'>
+          <p className='h6'>Receiving from: {sender.username}</p>
+          <p className='h6'>Sending to: {receiver.username}</p>
         </div>
       )}
     </div>
