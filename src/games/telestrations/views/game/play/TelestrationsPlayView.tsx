@@ -102,7 +102,7 @@ export function TelestrationsPlayView(): JSX.Element {
     });
   }
 
-  const receiver = chain.find((p, i) => {
+  const receiver = chain?.find((p, i) => {
     let prevInChain: Account;
 
     if (i === 0) {
@@ -117,7 +117,7 @@ export function TelestrationsPlayView(): JSX.Element {
     return true;
   });
 
-  const sender = chain.find((p, i) => {
+  const sender = chain?.find((p, i) => {
     let nextInChain: Account;
 
     if (i === chain.length - 1) {
@@ -143,7 +143,7 @@ export function TelestrationsPlayView(): JSX.Element {
       <div>
         <p className='h6'>Chain:</p>
         <div className='d-flex align-items-center pb-3'>
-          {chain.map(p => (
+          {chain?.map(p => (
             <React.Fragment key={p.id}>
               <Avatar player={p} />
               <img
@@ -152,7 +152,7 @@ export function TelestrationsPlayView(): JSX.Element {
                 style={{ width: '15px', height: '15px', margin: '0 5px' }}
               />
             </React.Fragment>
-          ))}
+          )) ?? <></>}
 
           <Avatar key='last-player-in-chain' player={chain[0]} />
         </div>
