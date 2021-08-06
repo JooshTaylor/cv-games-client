@@ -52,7 +52,9 @@ export function TelestrationsHomeView(): JSX.Element {
               <h2 className='h5'>Join a game</h2>
 
               {lobbies.map(l => (
-                <Link to={`/telestrations/${l.id}/lobby`}>{l.name}</Link>
+                <div key={l.id}>
+                  <Link to={`/telestrations/${l.id}/lobby`}>{l.name}</Link>
+                </div>
               ))}
             </>
           )}
