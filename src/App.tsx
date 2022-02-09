@@ -4,7 +4,11 @@ import {
   Switch,
   Route
 } from 'react-router-dom';
+
+import { GameSelector } from './shared/components/GameSelector';
+
 import { TelestrationsRoutes } from './games/telestrations/TelestrationsRoutes';
+import { WordleRoutes } from './games/wordle/WordleRoutes';
 
 export function App(): JSX.Element {
   return (
@@ -14,9 +18,13 @@ export function App(): JSX.Element {
           <Route path='/telestrations'>
             <TelestrationsRoutes />
           </Route>
-          {/* TODO: Update to show a game selector view when there are more games than just telestrations */}
+
+          <Route path='/wordle'>
+            <WordleRoutes />
+          </Route>
+
           <Route path='/'>
-            <TelestrationsRoutes />
+            <GameSelector />
           </Route>
         </Switch>
       </Router>
