@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRouteMatch, Switch, Route } from 'react-router-dom';
+import { useMatch, Routes, Route } from 'react-router-dom';
 
 import { TelestrationsRedirectManagerView } from './views/game/TelestrationsRedirectManagerView';
 import { TelestrationsLobbyView } from './views/game/lobby/TelestrationsLobbyView';
@@ -8,7 +8,7 @@ import { TelestrationsResultsView } from './views/game/results/TelestrationsResu
 import { TelestrationsHomeView } from './views/home/TelestrationsHomeView';
 
 export function TelestrationsRoutes(): JSX.Element {
-  const match = useRouteMatch();
+  const match = useMatch('/telestrations');
 
   React.useEffect(() => {
     const beforeUnloadListener = (event: any) => {
@@ -24,25 +24,25 @@ export function TelestrationsRoutes(): JSX.Element {
   }, []);
 
   return (
-    <div>
-      <Switch>
-        <Route path={`${match.path}/:id/lobby`}>
+    <React.Fragment>
+      <Routes>
+        <Route path={`${match?.pathname}/:id/lobby`}>
           <TelestrationsLobbyView />
         </Route>
-        <Route path={`${match.path}/:id/play`}>
+        <Route path={`${match?.pathname}/:id/play`}>
           <TelestrationsPlayView />
         </Route>
-        <Route path={`${match.path}/:id/results`}>
+        <Route path={`${match?.pathname}/:id/results`}>
           <TelestrationsResultsView />
         </Route>
-        <Route path={`${match.path}/:id`}>
+        <Route path={`${match?.pathname}/:id`}>
           <TelestrationsRedirectManagerView />
         </Route>
 
-        <Route path={match.path}>
+        <Route path={match?.pathname}>
           <TelestrationsHomeView />
         </Route>
-      </Switch>
-    </div>
+      </Routes>
+    </React.Fragment>
   );
 }

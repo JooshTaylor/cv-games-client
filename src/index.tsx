@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import axios from 'axios';
 import { io } from 'socket.io-client';
 
@@ -17,13 +17,14 @@ axios.defaults.baseURL = `${serverUrl}/api`;
 
 const socket = io(serverUrl);
 
+const root = createRoot(document.getElementById('root'));
+
 socket.on('connect', () => {
-  ReactDOM.render(
+  root.render(
     <React.StrictMode>
       <SocketIoContext.Provider value={socket}>
         <App />
       </SocketIoContext.Provider>
-    </React.StrictMode>,
-    document.getElementById('root')
+    </React.StrictMode>
   );
 });

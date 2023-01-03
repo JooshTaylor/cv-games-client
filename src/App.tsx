@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   HashRouter as Router,
-  Switch,
+  Routes,
   Route
 } from 'react-router-dom';
 
@@ -14,7 +14,7 @@ export function App(): JSX.Element {
   return (
     <div className='container-fluid'>
       <Router>
-        <Switch>
+        <Routes>
           <Route path='/telestrations'>
             <TelestrationsRoutes />
           </Route>
@@ -26,7 +26,7 @@ export function App(): JSX.Element {
           <Route path='/'>
             <GameSelector />
           </Route>
-        </Switch>
+        </Routes>
       </Router>
     </div>
   );

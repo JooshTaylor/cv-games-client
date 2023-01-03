@@ -1,12 +1,12 @@
 import React from 'react';
-import { useRouteMatch, Switch, Route } from 'react-router-dom';
+import { useMatch, Routes, Route } from 'react-router-dom';
 
 export function WordleRoutes(): JSX.Element {
-  const match = useRouteMatch();
+  const match = useMatch('/wordle');
 
   return (
     <div>
-      <Switch>
+      <Routes>
         {/* <Route path={`${match.path}/:id/lobby`}>
           <TelestrationsLobbyView />
         </Route>
@@ -20,10 +20,10 @@ export function WordleRoutes(): JSX.Element {
           <TelestrationsRedirectManagerView />
         </Route> */}
 
-        <Route path={match.path}>
+        <Route path={match?.pathname}>
           Wordle home
         </Route>
-      </Switch>
+      </Routes>
     </div>
   );
 }

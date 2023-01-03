@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect, useHistory, useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { useFetch } from '../../../../../shared/hooks/useFetch';
 import { useQuery } from '../../../../../shared/hooks/useQuery';
 import { ResultsCarousel } from '../../../components/result-carousel/ResultsCarousel';
@@ -13,7 +13,7 @@ import { AccountHelper } from '../../../utils/AccountHelper';
 
 export function TelestrationsResultsView(): JSX.Element {
   const params = useParams<TelestrationsViewParams>();
-  const history = useHistory();
+  const navigate = useNavigate();
   const queryParams = useQuery();
 
   const playerId = queryParams.get('playerId') ?? AccountHelper.getPlayerForLobby(params.id).id;
@@ -32,7 +32,7 @@ export function TelestrationsResultsView(): JSX.Element {
   useFetch<Lobby>({
     url: `/telestrations/lobby/${params.id}`,
     onSuccess: setLobby,
-    onError: () => history.push('/telestrations')
+    onError: () => navigate('/telestrations')
   });
 
   useFetch<TelestrationsResult>(lobby && {
@@ -52,7 +52,7 @@ export function TelestrationsResultsView(): JSX.Element {
     return <></>;
 
   if (lobby.status !== LobbyStatus.Complete)
-    return <Redirect to={`/telestrations/${lobby.id}`} />;
+    return <Navigate to={`/telestrations/${lobby.id}`} />;
 
   if (!playerResults)
     return <></>;
@@ -98,7 +98,7 @@ export function TelestrationsResultsView(): JSX.Element {
             <div>
               <button className='btn btn-primary' onClick={onClickViewChain}>See how it got here</button>
               <button className='btn btn-secondary mx-2' onClick={onClickViewOtherPlayers}>View other player's results</button>
-              <button className='btn btn-secondary mx-2' onClick={() => history.push('/telestrations')}>Back to home</button>
+              <button className='btn btn-secondary mx-2' onClick={() => navigate('/telestrations')}>Back to home</button>
             </div>
           </>
         );

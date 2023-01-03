@@ -1,12 +1,12 @@
 import React from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useFetch } from '../../../../shared/hooks/useFetch';
 
 import { axiosFetch } from '../../../../shared/utils/axiosFetch';
 import { Lobby } from '../../interfaces/Lobby';
 
 export function TelestrationsHomeView(): JSX.Element {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [ newLobbyName, setNewLobbyName ] = React.useState('');
   const [ lobbies, setLobbies ] = React.useState<Lobby[]>([]);
@@ -24,7 +24,7 @@ export function TelestrationsHomeView(): JSX.Element {
       url: '/telestrations/lobby',
       method: 'post',
       body: { name: newLobbyName },
-      onSuccess: lobby => history.push(`/telestrations/${lobby.id}/lobby`)
+      onSuccess: lobby => navigate(`/telestrations/${lobby.id}/lobby`)
     });
   }
 

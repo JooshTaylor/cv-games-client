@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect, useHistory, useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
 import { LobbyStatus } from '../../enums/LobbyStatus';
 
@@ -9,14 +9,14 @@ import { Lobby } from '../../interfaces/Lobby';
 
 export function TelestrationsRedirectManagerView(): JSX.Element {
   const params = useParams<TelestrationsViewParams>();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [ lobby, setLobby ] = React.useState<Lobby>(null as any);
 
   useFetch({
     url: `/telestrations/lobby/${params.id}`,
     onSuccess: setLobby,
-    onError: () => history.push('/telestrations')
+    onError: () => navigate('/telestrations')
   });
 
   if (!lobby?.id)
@@ -24,12 +24,12 @@ export function TelestrationsRedirectManagerView(): JSX.Element {
 
   switch (lobby.status) {
     case LobbyStatus.WaitingForPlayers:
-      return <Redirect to={`/telestrations/${params.id}/lobby`} />
+      return <Navigate to={`/telestrations/${params.id}/lobby`} />
     case LobbyStatus.InProgress:
-      return <Redirect to={`/telestrations/${params.id}/play`} />
+      return <Navigate to={`/telestrations/${params.id}/play`} />
     case LobbyStatus.Complete:
-      return <Redirect to={`/telestrations/${params.id}/results`} />
+      return <Navigate to={`/telestrations/${params.id}/results`} />
     default:
-      return <Redirect to='/telestrations' />;
+      return <Navigate to='/telestrations' />;
   }
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect, useHistory, useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
 import { SocketIoContext } from '../../../../../shared/contexts/SocketIoContext';
 import { useFetch } from '../../../../../shared/hooks/useFetch';
@@ -14,7 +14,7 @@ import { AccountHelper } from '../../../utils/AccountHelper';
 
 export function TelestrationsLobbyView(): JSX.Element {
   const params = useParams<TelestrationsViewParams>();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [ lobby, setLobby ] = React.useState<Lobby>(null as any);
   const [ accounts, setAccounts ] = React.useState<Account[]>(null as any);
@@ -27,7 +27,7 @@ export function TelestrationsLobbyView(): JSX.Element {
   useFetch<Lobby>({
     url: `/telestrations/lobby/${params.id}`,
     onSuccess: setLobby,
-    onError: () => history.push('/telestrations')
+    onError: () => navigate('/telestrations')
   });
 
   useFetch<Account[]>({
@@ -64,7 +64,7 @@ export function TelestrationsLobbyView(): JSX.Element {
     socket.emit(TelestrationsEvents.JOIN_LOBBY, lobby.id);
 
     socket.on(TelestrationsEvents.START_GAME, () => {
-      history.push(`/telestrations/${lobby.id}/play`);
+      navigate(`/telestrations/${lobby.id}/play`);
     });
 
     return () => {
@@ -120,7 +120,7 @@ export function TelestrationsLobbyView(): JSX.Element {
     return <></>;
 
   if (lobby.status !== LobbyStatus.WaitingForPlayers)
-    return <Redirect to={`/telestrations/${lobby.id}`} />;
+    return <Navigate to={`/telestrations/${lobby.id}`} />;
 
   return (
     <div>
