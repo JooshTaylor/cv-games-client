@@ -10,16 +10,17 @@ import { LobbyStatus } from '@/games/telestrations/enums/LobbyStatus';
 import { TelestrationsRoundType } from '@/games/telestrations/enums/TelestrationsRoundType';
 import { Lobby } from '@/games/telestrations/interfaces/Lobby';
 import { TelestrationsRound } from '@/games/telestrations/interfaces/TelestrationsRound';
-import { AccountHelper } from '@/games/telestrations/utils/AccountHelper';
 import { SocketIoContext } from '@/shared/contexts/SocketIoContext';
 import { useFetch } from '@/shared/hooks/useFetch';
 import { Account } from '@/shared/interfaces/Account';
 import { axiosFetch } from '@/shared/utils/axiosFetch';
+import { useAccounts } from '@/games/telestrations/hooks/useAccounts';
 
 export default function TelestrationsPlayView(): JSX.Element {
   const router = useRouter();
 
-  const currentPlayer = AccountHelper.getPlayerForLobby(router.query.id);
+  const accounts = useAccounts();
+  const currentPlayer = accounts.getPlayerForLobby(router.query.id);
 
   const [ lobby, setLobby ] = React.useState<Lobby>(null as any);
   const [ word, setWord ] = React.useState<string>();

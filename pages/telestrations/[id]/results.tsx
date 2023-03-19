@@ -6,14 +6,15 @@ import { ResultsLinks } from '@/games/telestrations/components/results-links/Res
 import { LobbyStatus } from '@/games/telestrations/enums/LobbyStatus';
 import { Lobby } from '@/games/telestrations/interfaces/Lobby';
 import { TelestrationsResult } from '@/games/telestrations/interfaces/TelestrationsResult';
-import { AccountHelper } from '@/games/telestrations/utils/AccountHelper';
 import { useFetch } from '@/shared/hooks/useFetch';
 import { useParam } from '@/shared/hooks/useParam';
+import { useAccounts } from '@/games/telestrations/hooks/useAccounts';
 
 export default function TelestrationsResultsView(): JSX.Element {
+  const accounts = useAccounts();
   const router = useRouter();
   const lobbyId = useParam('id');
-  const playerId = useParam('playerId', () => AccountHelper.getPlayerForLobby(lobbyId).id);
+  const playerId = useParam('playerId', () => accounts.getPlayerForLobby(lobbyId).id);
 
   const [ lobby, setLobby ] = React.useState<Lobby>(null as any);
   const [ playerResults, setPlayerResults ] = React.useState<TelestrationsResult>(null as any);
