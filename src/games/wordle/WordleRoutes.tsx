@@ -1,9 +1,7 @@
 import React from 'react';
-import { useMatch, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 export function WordleRoutes(): JSX.Element {
-  const match = useMatch('/wordle');
-
   return (
     <div>
       <Routes>
@@ -20,9 +18,7 @@ export function WordleRoutes(): JSX.Element {
           <TelestrationsRedirectManagerView />
         </Route> */}
 
-        <Route path={match?.pathname}>
-          Wordle home
-        </Route>
+        <Route path='/' element={<>Wordle home</>} />
       </Routes>
     </div>
   );

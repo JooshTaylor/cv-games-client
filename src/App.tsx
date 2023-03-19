@@ -15,17 +15,11 @@ export function App(): JSX.Element {
     <div className='container-fluid'>
       <Router>
         <Routes>
-          <Route path='/telestrations'>
-            <TelestrationsRoutes />
-          </Route>
+          <Route path='/telestrations/*' element={<TelestrationsRoutes />} />
 
-          <Route path='/wordle'>
-            <WordleRoutes />
-          </Route>
+          <Route path='/wordle/*' element={<WordleRoutes />} />
 
-          <Route path='/'>
-            <GameSelector />
-          </Route>
+          <Route path='/' element={<GameSelector />} />
         </Routes>
       </Router>
     </div>
