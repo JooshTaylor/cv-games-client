@@ -1,12 +1,13 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useFetch } from '../../../../shared/hooks/useFetch';
+import Link from 'next/link';
+import { useRouter } from 'next/router'
 
-import { axiosFetch } from '../../../../shared/utils/axiosFetch';
-import { Lobby } from '../../interfaces/Lobby';
+import { useFetch } from '@/shared/hooks/useFetch';
+import { axiosFetch } from '@/shared/utils/axiosFetch';
+import { Lobby } from '@/games/telestrations/interfaces/Lobby';
 
-export function TelestrationsHomeView(): JSX.Element {
-  const navigate = useNavigate();
+export default function TelestrationsHomeView(): JSX.Element {
+  const router = useRouter();
 
   const [ newLobbyName, setNewLobbyName ] = React.useState('');
   const [ lobbies, setLobbies ] = React.useState<Lobby[]>([]);
@@ -24,7 +25,7 @@ export function TelestrationsHomeView(): JSX.Element {
       url: '/telestrations/lobby',
       method: 'post',
       body: { name: newLobbyName },
-      onSuccess: lobby => navigate(`/telestrations/${lobby.id}/lobby`)
+      onSuccess: lobby => router.push(`/telestrations/${lobby.id}/lobby`)
     });
   }
 
@@ -53,7 +54,7 @@ export function TelestrationsHomeView(): JSX.Element {
 
               {lobbies.map(l => (
                 <div key={l.id}>
-                  <Link to={`/telestrations/${l.id}/lobby`}>{l.name}</Link>
+                  <Link href={`/telestrations/${l.id}/lobby`}>{l.name}</Link>
                 </div>
               ))}
             </>

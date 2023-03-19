@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 export function GameSelector(): JSX.Element {
   return (
@@ -10,10 +10,10 @@ export function GameSelector(): JSX.Element {
 
       <ul className='list-unstyled'>
         <li>
-          <Link to='/telestrations'>Telestrations</Link>
+          <Link href='/telestrations'>Telestrations</Link>
         </li>
         <li>
-          <Link to='/wordle'>Wordle Co-op</Link>
+          <Link href='/wordle'>Wordle Co-op</Link>
         </li>
       </ul>
     </div>

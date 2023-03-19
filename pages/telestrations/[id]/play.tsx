@@ -1,27 +1,25 @@
 import React from 'react';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
-import { SocketIoContext } from '../../../../../shared/contexts/SocketIoContext';
-import { useFetch } from '../../../../../shared/hooks/useFetch';
-import { Account } from '../../../../../shared/interfaces/Account';
-import { axiosFetch } from '../../../../../shared/utils/axiosFetch';
-import { Avatar } from '../../../components/avatar/Avatar';
-import { DrawWord } from '../../../components/draw-word/DrawWord';
-import { GuessWord } from '../../../components/guess-word/GuessWord';
-import { SelectWord } from '../../../components/select-word/SelectWord';
-import { TelestrationsEvents } from '../../../constants/TelestrationsEvents';
-import { LobbyStatus } from '../../../enums/LobbyStatus';
-import { TelestrationsRoundType } from '../../../enums/TelestrationsRoundType';
-import { Lobby } from '../../../interfaces/Lobby';
-import { TelestrationsRound } from '../../../interfaces/TelestrationsRound';
+import { useRouter } from 'next/router';
 
-import { TelestrationsViewParams } from '../../../interfaces/TelestrationsViewParams';
-import { AccountHelper } from '../../../utils/AccountHelper';
+import { Avatar } from '@/games/telestrations/components/avatar/Avatar';
+import { DrawWord } from '@/games/telestrations/components/draw-word/DrawWord';
+import { GuessWord } from '@/games/telestrations/components/guess-word/GuessWord';
+import { SelectWord } from '@/games/telestrations/components/select-word/SelectWord';
+import { TelestrationsEvents } from '@/games/telestrations/constants/TelestrationsEvents';
+import { LobbyStatus } from '@/games/telestrations/enums/LobbyStatus';
+import { TelestrationsRoundType } from '@/games/telestrations/enums/TelestrationsRoundType';
+import { Lobby } from '@/games/telestrations/interfaces/Lobby';
+import { TelestrationsRound } from '@/games/telestrations/interfaces/TelestrationsRound';
+import { AccountHelper } from '@/games/telestrations/utils/AccountHelper';
+import { SocketIoContext } from '@/shared/contexts/SocketIoContext';
+import { useFetch } from '@/shared/hooks/useFetch';
+import { Account } from '@/shared/interfaces/Account';
+import { axiosFetch } from '@/shared/utils/axiosFetch';
 
-export function TelestrationsPlayView(): JSX.Element {
-  const params = useParams<TelestrationsViewParams>();
-  const navigate = useNavigate();
+export default function TelestrationsPlayView(): JSX.Element {
+  const router = useRouter();
 
-  const currentPlayer = AccountHelper.getPlayerForLobby(params.id);
+  const currentPlayer = AccountHelper.getPlayerForLobby(router.query.id);
 
   const [ lobby, setLobby ] = React.useState<Lobby>(null as any);
   const [ word, setWord ] = React.useState<string>();
@@ -32,16 +30,16 @@ export function TelestrationsPlayView(): JSX.Element {
   const socket = React.useContext(SocketIoContext);
 
   useFetch<Lobby>({
-    url: `/telestrations/lobby/${params.id}`,
+    url: `/telestrations/lobby/${router.query.id}`,
     onSuccess: lobby => {
       setLobby(lobby);
       setWaitingOn(lobby.players);
     },
-    onError: () => navigate('/telestrations')
+    onError: () => router.push('/telestrations')
   });
 
   useFetch<string>({
-    url: `/telestrations/lobby/${params.id}/players/${currentPlayer.id}/word`,
+    url: `/telestrations/lobby/${router.query.id}/players/${currentPlayer.id}/word`,
     onSuccess: setWord,
     onError: () => setWord('')
   });
@@ -76,11 +74,18 @@ export function TelestrationsPlayView(): JSX.Element {
     setWaitingOn(lobby.players);
   }, [round?.roundNumber]);
 
+  React.useEffect(() => {
+    if (!lobby || lobby.status === LobbyStatus.InProgress)
+      return;
+
+    router.replace(`/telestrations/${lobby.id}`);
+  }, [lobby?.status]);
+
   function onSelectWord(word: string): void {
     setWord(word);
 
     axiosFetch({
-      url: `/telestrations/lobby/${params.id}/players/${currentPlayer.id}/word`,
+      url: `/telestrations/lobby/${router.query.id}/players/${currentPlayer.id}/word`,
       method: 'post',
       body: { word }
     });
@@ -88,7 +93,7 @@ export function TelestrationsPlayView(): JSX.Element {
 
   function onSubmitDrawing(drawingImageUrl: string): void {
     axiosFetch({
-      url: `/telestrations/lobby/${params.id}/players/${currentPlayer.id}/round/${lobby.currentRound}/drawing`,
+      url: `/telestrations/lobby/${router.query.id}/players/${currentPlayer.id}/round/${lobby.currentRound}/drawing`,
       method: 'post',
       body: { drawing: drawingImageUrl }
     });
@@ -96,7 +101,7 @@ export function TelestrationsPlayView(): JSX.Element {
 
   function onGuessWord(guess: string): void {
     axiosFetch({
-      url: `/telestrations/lobby/${params.id}/players/${currentPlayer.id}/round/${lobby.currentRound}/guess`,
+      url: `/telestrations/lobby/${router.query.id}/players/${currentPlayer.id}/round/${lobby.currentRound}/guess`,
       method: 'post',
       body: { guess }
     });
@@ -134,9 +139,6 @@ export function TelestrationsPlayView(): JSX.Element {
 
   if (!round)
     return <></>;
-
-  if (lobby.status !== LobbyStatus.InProgress)
-    return <Navigate to={`/telestrations/${lobby.id}`} />;
 
   return (
     <div>
@@ -178,7 +180,7 @@ export function TelestrationsPlayView(): JSX.Element {
               }
           
               default: {
-                return <Navigate to={`/telestrations/${lobby.id}`} />;
+                return <>Something went wrong</>;
               }
             }
           })()}

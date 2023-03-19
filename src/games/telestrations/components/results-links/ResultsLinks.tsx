@@ -1,5 +1,5 @@
+import Link from 'next/link';
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Lobby } from '../../interfaces/Lobby';
 
 interface ResultsLinksProps {
@@ -14,7 +14,7 @@ export function ResultsLinks(props: ResultsLinksProps): JSX.Element {
       <ul className='list-unstyled'>
         {props.lobby.players.filter(p => p.id !== props.currentPlayerId).map(p => (
           <li key={p.id}>
-            <Link to={`/telestrations/${props.lobby.id}/results?playerId=${p.id}`}>
+            <Link href={`/telestrations/${props.lobby.id}/results?playerId=${p.id}`}>
               {p.username}
             </Link>
           </li>

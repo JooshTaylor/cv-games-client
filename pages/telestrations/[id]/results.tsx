@@ -1,22 +1,19 @@
 import React from 'react';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
-import { useFetch } from '../../../../../shared/hooks/useFetch';
-import { useQuery } from '../../../../../shared/hooks/useQuery';
-import { ResultsCarousel } from '../../../components/result-carousel/ResultsCarousel';
-import { ResultsLinks } from '../../../components/results-links/ResultsLinks';
-import { LobbyStatus } from '../../../enums/LobbyStatus';
-import { Lobby } from '../../../interfaces/Lobby';
-import { TelestrationsResult } from '../../../interfaces/TelestrationsResult';
+import { useRouter } from 'next/router';
 
-import { TelestrationsViewParams } from '../../../interfaces/TelestrationsViewParams';
-import { AccountHelper } from '../../../utils/AccountHelper';
+import { ResultsCarousel } from '@/games/telestrations/components/result-carousel/ResultsCarousel';
+import { ResultsLinks } from '@/games/telestrations/components/results-links/ResultsLinks';
+import { LobbyStatus } from '@/games/telestrations/enums/LobbyStatus';
+import { Lobby } from '@/games/telestrations/interfaces/Lobby';
+import { TelestrationsResult } from '@/games/telestrations/interfaces/TelestrationsResult';
+import { AccountHelper } from '@/games/telestrations/utils/AccountHelper';
+import { useFetch } from '@/shared/hooks/useFetch';
+import { useParam } from '@/shared/hooks/useParam';
 
-export function TelestrationsResultsView(): JSX.Element {
-  const params = useParams<TelestrationsViewParams>();
-  const navigate = useNavigate();
-  const queryParams = useQuery();
-
-  const playerId = queryParams.get('playerId') ?? AccountHelper.getPlayerForLobby(params.id).id;
+export default function TelestrationsResultsView(): JSX.Element {
+  const router = useRouter();
+  const lobbyId = useParam('id');
+  const playerId = useParam('playerId', () => AccountHelper.getPlayerForLobby(lobbyId).id);
 
   const [ lobby, setLobby ] = React.useState<Lobby>(null as any);
   const [ playerResults, setPlayerResults ] = React.useState<TelestrationsResult>(null as any);
@@ -30,15 +27,22 @@ export function TelestrationsResultsView(): JSX.Element {
   }, [playerId]);
 
   useFetch<Lobby>({
-    url: `/telestrations/lobby/${params.id}`,
+    url: `/telestrations/lobby/${lobbyId}`,
     onSuccess: setLobby,
-    onError: () => navigate('/telestrations')
+    onError: () => router.replace('/telestrations')
   });
 
   useFetch<TelestrationsResult>(lobby && {
-    url: `/telestrations/lobby/${params.id}/players/${playerId}/results`,
+    url: `/telestrations/lobby/${lobbyId}/players/${playerId}/results`,
     onSuccess: setPlayerResults
   });
+
+  React.useEffect(() => {
+    if (!lobby || lobby.status === LobbyStatus.Complete)
+      return;
+
+    router.replace(`/telestrations/${lobby.id}`);
+  }, [lobby?.status]);
 
   function onClickViewChain(): void {
     setShowCarousel(true);
@@ -50,9 +54,6 @@ export function TelestrationsResultsView(): JSX.Element {
 
   if (!lobby)
     return <></>;
-
-  if (lobby.status !== LobbyStatus.Complete)
-    return <Navigate to={`/telestrations/${lobby.id}`} />;
 
   if (!playerResults)
     return <></>;
@@ -96,9 +97,15 @@ export function TelestrationsResultsView(): JSX.Element {
             }
 
             <div>
-              <button className='btn btn-primary' onClick={onClickViewChain}>See how it got here</button>
-              <button className='btn btn-secondary mx-2' onClick={onClickViewOtherPlayers}>View other player's results</button>
-              <button className='btn btn-secondary mx-2' onClick={() => navigate('/telestrations')}>Back to home</button>
+              <button className='btn btn-primary' onClick={onClickViewChain}>
+                See how it got here
+              </button>
+              <button className='btn btn-secondary mx-2' onClick={onClickViewOtherPlayers}>
+                View other player's results
+              </button>
+              <button className='btn btn-secondary mx-2' onClick={() => router.push('/telestrations')}>
+                Back to home
+              </button>
             </div>
           </>
         );

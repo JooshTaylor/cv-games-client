@@ -1,7 +1,7 @@
 import React from 'react';
 import { TelestrationsRound } from '../../interfaces/TelestrationsRound';
 
-import './canvas.scss';
+import styles from './canvas.module.scss';
 
 interface DrawWordProps {
   round: TelestrationsRound;
@@ -141,6 +141,7 @@ export function DrawWord(props: DrawWordProps): JSX.Element {
       </h2>
 
       <canvas
+        className={styles.canvas}
         id="canvas"
         height="600"
         width="600"
