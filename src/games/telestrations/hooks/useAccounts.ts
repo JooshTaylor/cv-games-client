@@ -12,7 +12,7 @@ export const useAccounts = () => {
     // if (typeof(account) === 'string')
     //   return JSON.parse(account);
 
-    return null as any;
+    return {} as any;
   }
 
   function setPlayerForLobby(lobbyId: string, account: Account): void {
