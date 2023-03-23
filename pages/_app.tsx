@@ -17,7 +17,7 @@ const socket = io(serverUrl, {
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <SocketIoContext.Provider value={socket}>
-      <Component {...pageProps} />;
+      <Component {...pageProps} />
     </SocketIoContext.Provider>
   );
 }
