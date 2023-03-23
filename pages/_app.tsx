@@ -10,7 +10,9 @@ const serverUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:400
 
 axios.defaults.baseURL = `${serverUrl}/api`;
 
-const socket = io(serverUrl);
+const socket = io(serverUrl, {
+  path: '/api'
+});
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
