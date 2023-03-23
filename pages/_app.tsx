@@ -6,9 +6,7 @@ import { SocketIoContext } from '@/shared/contexts/SocketIoContext';
 
 import '../styles/styles.scss';
 
-const serverUrl = process.env.NODE_ENV === 'development'
-  ? 'http://localhost:4000'
-  : 'https://cv-games-api.herokuapp.com';
+const serverUrl = 'http://localhost:4000';
 
 axios.defaults.baseURL = `${serverUrl}/api`;
 
