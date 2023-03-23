@@ -6,7 +6,7 @@ import { SocketIoContext } from '@/shared/contexts/SocketIoContext';
 
 import '../styles/styles.scss';
 
-const serverUrl = 'http://localhost:4000';
+const serverUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:4000' : 'https://joshuataylor.dev';
 
 axios.defaults.baseURL = `${serverUrl}/api`;
 
