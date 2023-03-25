@@ -136,6 +136,15 @@ export function DrawWord(props: DrawWordProps): JSX.Element {
     props.onSubmitDrawing(canvasRef.current.toDataURL());
   }
 
+  function onClickClear(): void {
+    if (!canvasRef.current || lockCanvas)
+      return;
+
+    const ctx = canvasRef.current.getContext('2d') as CanvasRenderingContext2D
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(0, 0, 600, 600);
+  }
+
   return (
     <>
       <h2>
@@ -145,20 +154,23 @@ export function DrawWord(props: DrawWordProps): JSX.Element {
         }
       </h2>
 
-      <canvas
-        className={styles.canvas}
-        id='canvas'
-        height='600'
-        width='600'
-        ref={canvasRef}
-        onMouseDown={onMouseDown}
-        onMouseMove={onMouseMove}
-        onMouseUp={onMouseUp}
-      >
-      </canvas>
+      <div className={styles.container}>
+        <canvas
+          className={styles.canvas}
+          id='canvas'
+          height='600'
+          width='600'
+          ref={canvasRef}
+          onMouseDown={onMouseDown}
+          onMouseMove={onMouseMove}
+          onMouseUp={onMouseUp}
+        >
+        </canvas>
 
-      <div>
-        <button className='btn btn-primary' onClick={onClickDone} disabled={lockCanvas}>Submit Drawing</button>
+        <div className='d-flex justify-content-end'>
+          <button className='btn btn-light me-3' onClick={onClickClear} disabled={lockCanvas}>Clear Drawing</button>
+          <button className='btn btn-primary' onClick={onClickDone} disabled={lockCanvas}>Submit Drawing</button>
+        </div>
       </div>
     </>
   );
