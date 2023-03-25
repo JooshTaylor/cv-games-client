@@ -16,7 +16,11 @@ export function DrawWord(props: DrawWordProps): JSX.Element {
   const [ lastY, setLastY ] = React.useState(0);
   const [ lineThickness, setLineThickness ] = React.useState(1);
 
-  const [ lockCanvas, setLockCanvas ] = React.useState(!!props.round.drawing);
+  const [ lockCanvas, setLockCanvas ] = React.useState(true);
+
+  React.useEffect(() => {
+    setLockCanvas(!!props.round.drawing);
+  }, []);
 
   React.useEffect(() => {
     if (!canvasRef.current)
@@ -31,13 +35,14 @@ export function DrawWord(props: DrawWordProps): JSX.Element {
   }, [canvasRef.current]);
 
   function onMouseDown(e: any) {
+    console.log(canvasRef.current, lockCanvas);
     if (!canvasRef.current || lockCanvas)
       return;
 
     const ctx = canvasRef.current.getContext('2d') as CanvasRenderingContext2D
 
     setIsPainting(true);
-    ctx.fillStyle = "#ffffff";
+    ctx.fillStyle = '#ffffff';
     setLastX(e.pageX - canvasRef.current.offsetLeft);
     setLastY(e.pageY - canvasRef.current.offsetTop);
   }
@@ -142,9 +147,9 @@ export function DrawWord(props: DrawWordProps): JSX.Element {
 
       <canvas
         className={styles.canvas}
-        id="canvas"
-        height="600"
-        width="600"
+        id='canvas'
+        height='600'
+        width='600'
         ref={canvasRef}
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
